@@ -1,5 +1,5 @@
 [package]
-name = "cargo-bloat-tree"
+name = "bloat-tree"
 version = "0.1.0"
 edition = "2021"
 description = "Attribute `cargo bloat --crates` output to the dependencies you actually declared"

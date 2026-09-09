@@ -3,9 +3,10 @@
 [![CI](https://github.com/co3moz/cargo-bloat-tree/actions/workflows/ci.yml/badge.svg)](https://github.com/co3moz/cargo-bloat-tree/actions/workflows/ci.yml)
 
 ```
+$ cargo install bloat-tree
 $ cargo bloat-tree --release
 
-cargo-bloat-tree v0.1.0   file 1.3MiB   .text 1006.0KiB
+bloat-tree v0.1.0   file 1.3MiB   .text 1006.0KiB
 
 Direct dependencies (the ones you declared)
       Total       %   Exclusive       Self  Crate
@@ -59,8 +60,11 @@ nothing. That is what the `Exclusive` column is for.
 ## Install
 
 ```bash
-cargo install cargo-bloat        # the analyser this tool builds on
-cargo install --path .           # this tool
+cargo install cargo-bloat   # the analyser this tool builds on
+cargo install bloat-tree    # this tool, published as bloat-tree
+
+# or from a checkout
+cargo install --path .
 ```
 
 ## Reading the numbers
