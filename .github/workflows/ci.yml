@@ -35,6 +35,8 @@ jobs:
             ~/.cargo/git
             ~/.cargo/bin/cargo-bloat
             ~/.cargo/bin/cargo-bloat.exe
+            ~/.cargo/.crates.toml
+            ~/.cargo/.crates2.json
             target
           key: ${{ matrix.os }}-cargo-${{ hashFiles('Cargo.lock') }}
           restore-keys: ${{ matrix.os }}-cargo-
@@ -51,7 +53,10 @@ jobs:
         run: cargo test
 
       - name: Install cargo-bloat
-        run: cargo install cargo-bloat --locked
+        shell: bash
+        # a cached binary without cargo's install metadata makes `cargo install`
+        # bail out with "already exists in destination", so ask the PATH instead
+        run: command -v cargo-bloat > /dev/null || cargo install cargo-bloat --locked
 
       - name: End to end smoke test
         shell: bash
