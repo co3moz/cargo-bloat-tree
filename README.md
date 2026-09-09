@@ -60,12 +60,16 @@ nothing. That is what the `Exclusive` column is for.
 ## Install
 
 ```bash
-cargo install cargo-bloat   # the analyser this tool builds on
-cargo install bloat-tree    # this tool, published as bloat-tree
+cargo install bloat-tree    # published as bloat-tree, invoked as cargo bloat-tree
 
 # or from a checkout
 cargo install --path .
 ```
+
+It shells out to [`cargo bloat`][bloat], which is a separate binary and cannot be
+pulled in as a dependency, so the first run offers to install it for you. Use
+`--install-cargo-bloat` to skip the question, or install it yourself with
+`cargo install cargo-bloat`.
 
 ## Reading the numbers
 

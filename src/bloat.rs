@@ -1,4 +1,4 @@
-use std::io::Read;
+use std::io::{Read, Write};
 use std::process::{Command, Stdio};
 
 use anyhow::{bail, Context, Result};
@@ -64,8 +64,57 @@ pub fn obtain(args: &Args) -> Result<BloatOutput> {
     Ok(out)
 }
 
+fn cargo() -> std::ffi::OsString {
+    std::env::var_os("CARGO").unwrap_or_else(|| "cargo".into())
+}
+
+/// `cargo bloat` is a separate binary, and `cargo install` does not install the
+/// binaries of a dependency, so it has to be there before the first build.
+fn ensure_cargo_bloat(args: &Args) -> Result<()> {
+    let exe = format!("cargo-bloat{}", std::env::consts::EXE_SUFFIX);
+    let found = std::env::var_os("PATH")
+        .map(|path| std::env::split_paths(&path).any(|dir| dir.join(&exe).is_file()))
+        .unwrap_or(false);
+    if found {
+        return Ok(());
+    }
+
+    if !args.install_cargo_bloat && !ask_to_install()? {
+        bail!(
+            "cargo bloat is not installed. Run `cargo install cargo-bloat`, \
+             or pass --install-cargo-bloat to let this tool do it"
+        );
+    }
+
+    eprintln!("installing cargo-bloat...");
+    let status = Command::new(cargo())
+        .args(["install", "cargo-bloat", "--locked"])
+        .status()
+        .context("failed to run `cargo install cargo-bloat`")?;
+    if !status.success() {
+        bail!("`cargo install cargo-bloat` failed with {status}");
+    }
+    Ok(())
+}
+
+fn ask_to_install() -> Result<bool> {
+    use std::io::IsTerminal;
+    if !std::io::stdin().is_terminal() {
+        return Ok(false);
+    }
+    eprint!("cargo-bloat is not installed, install it now? [y/N] ");
+    std::io::stderr().flush().ok();
+    let mut answer = String::new();
+    std::io::stdin()
+        .read_line(&mut answer)
+        .context("failed to read the answer")?;
+    Ok(matches!(answer.trim(), "y" | "Y" | "yes"))
+}
+
 fn run(args: &Args) -> Result<String> {
-    let mut cmd = Command::new(std::env::var_os("CARGO").unwrap_or_else(|| "cargo".into()));
+    ensure_cargo_bloat(args)?;
+
+    let mut cmd = Command::new(cargo());
     cmd.arg("bloat")
         .args(["--crates", "-n", "0", "--message-format", "json"]);
 
@@ -126,7 +175,7 @@ fn run(args: &Args) -> Result<String> {
     let out = cmd
         .stderr(Stdio::inherit())
         .output()
-        .context("failed to run `cargo bloat`, install it with `cargo install cargo-bloat`")?;
+        .context("failed to run `cargo bloat`")?;
     if !out.status.success() {
         bail!("`cargo bloat` failed with {}", out.status);
     }

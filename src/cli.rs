@@ -7,7 +7,7 @@ use clap::{Parser, ValueEnum};
     name = "cargo-bloat-tree",
     bin_name = "cargo bloat-tree",
     version,
-    about = "Attribute `cargo bloat --crates` sizes to the dependencies you actually declared",
+    about = "Cargo dependency bloat mapper",
     after_help = "\
 EXAMPLES:
     cargo bloat-tree --release
@@ -22,6 +22,10 @@ pub struct Args {
     /// instead of building ("-" reads stdin)
     #[arg(long, value_name = "PATH", help_heading = "Input")]
     pub bloat_json: Option<String>,
+
+    /// Install cargo-bloat without asking if it is missing
+    #[arg(long, help_heading = "Input")]
+    pub install_cargo_bloat: bool,
 
     /// Write the `cargo bloat` JSON that was produced to this file
     #[arg(long, value_name = "PATH", help_heading = "Input")]

@@ -2,7 +2,7 @@
 name = "bloat-tree"
 version = "0.1.0"
 edition = "2021"
-description = "Attribute `cargo bloat --crates` output to the dependencies you actually declared"
+description = "Cargo dependency bloat mapper"
 license = "MIT"
 readme = "README.md"
 keywords = ["cargo", "bloat", "tree", "size", "dependencies"]
