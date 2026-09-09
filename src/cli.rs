@@ -119,7 +119,13 @@ pub struct Args {
     pub invert: Option<String>,
 
     /// Show only the N heaviest direct dependencies (0 = all)
-    #[arg(short = 'n', long, value_name = "NUM", default_value_t = 0, help_heading = "Output")]
+    #[arg(
+        short = 'n',
+        long,
+        value_name = "NUM",
+        default_value_t = 0,
+        help_heading = "Output"
+    )]
     pub top: usize,
 
     /// Maximum depth of the printed tree
@@ -127,7 +133,12 @@ pub struct Args {
     pub depth: Option<usize>,
 
     /// Hide crates smaller than this (e.g. 4KiB, 100kb, 2MiB)
-    #[arg(long, value_name = "SIZE", default_value = "0", help_heading = "Output")]
+    #[arg(
+        long,
+        value_name = "SIZE",
+        default_value = "0",
+        help_heading = "Output"
+    )]
     pub min_size: String,
 
     /// How to count a crate that several direct dependencies pull in

@@ -51,7 +51,12 @@ impl Theme {
     fn glyphs(&self) -> (&'static str, &'static str, &'static str, &'static str) {
         match self.charset {
             // branch, last branch, vertical, blank
-            Charset::Utf8 => ("\u{251c}\u{2500}\u{2500} ", "\u{2514}\u{2500}\u{2500} ", "\u{2502}   ", "    "),
+            Charset::Utf8 => (
+                "\u{251c}\u{2500}\u{2500} ",
+                "\u{2514}\u{2500}\u{2500} ",
+                "\u{2502}   ",
+                "    ",
+            ),
             Charset::Ascii => ("|-- ", "`-- ", "|   ", "    "),
         }
     }
@@ -199,12 +204,7 @@ fn summary(
             .filter(|u| u.bucket == bucket)
             .map(|u| u.name.as_str())
             .collect();
-        let head = names
-            .iter()
-            .take(3)
-            .copied()
-            .collect::<Vec<_>>()
-            .join(", ");
+        let head = names.iter().take(3).copied().collect::<Vec<_>>().join(", ");
         if names.len() > 3 {
             format!("{head}, +{} more", names.len() - 3)
         } else {
@@ -232,11 +232,7 @@ fn summary(
             "reachable from more than one direct dependency",
         )?;
     }
-    row(
-        "your own code",
-        an.own,
-        "the analysed crate itself",
-    )?;
+    row("your own code", an.own, "the analysed crate itself")?;
     let std_names = names_in(Bucket::Std);
     row(
         "std / toolchain",
@@ -255,10 +251,17 @@ fn summary(
     row(
         "unattributed",
         an.bucket_total(Bucket::Unknown),
-        &format!("cargo bloat could not name these: {}", names_in(Bucket::Unknown)),
+        &format!(
+            "cargo bloat could not name these: {}",
+            names_in(Bucket::Unknown)
+        ),
     )?;
     let unmeasured = an.text_size.saturating_sub(an.measured);
-    row("not measured", unmeasured, "padding, sections outside .text")?;
+    row(
+        "not measured",
+        unmeasured,
+        "padding, sections outside .text",
+    )?;
 
     if !an.shared.is_empty() && args.attribution == Attribution::Exclusive {
         writeln!(
@@ -578,7 +581,10 @@ fn invert_children(
     seen: &mut HashSet<usize>,
 ) -> Result<()> {
     let InvertCtx {
-        graph, an, theme, rev,
+        graph,
+        an,
+        theme,
+        rev,
     } = *ctx;
     let (branch, last_branch, vertical, blank) = theme.glyphs();
     let mut parents: Vec<usize> = rev[node]
@@ -605,10 +611,17 @@ fn invert_children(
             out,
             "{}{}  {}{}{} {}{}",
             pad(&theme.size(an.sizes[parent], an.text_size), 11),
-            pad(&format!("{:.1}%", percent(an.sizes[parent], an.text_size)), 8),
+            pad(
+                &format!("{:.1}%", percent(an.sizes[parent], an.text_size)),
+                8
+            ),
             prefix,
             glyph,
-            if direct { theme.bold(&pkg.name) } else { pkg.name.clone() },
+            if direct {
+                theme.bold(&pkg.name)
+            } else {
+                pkg.name.clone()
+            },
             theme.dim(&format!("v{}", pkg.version)),
             if repeated {
                 format!("{tag}{}", theme.dim(" (*)"))

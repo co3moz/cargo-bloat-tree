@@ -33,8 +33,9 @@ pub fn obtain(args: &Args) -> Result<BloatOutput> {
                 .context("failed to read cargo bloat JSON from stdin")?;
             buf
         }
-        Some(path) => std::fs::read_to_string(path)
-            .with_context(|| format!("failed to read `{path}`"))?,
+        Some(path) => {
+            std::fs::read_to_string(path).with_context(|| format!("failed to read `{path}`"))?
+        }
         None => run(args)?,
     };
 

@@ -136,9 +136,12 @@ pub fn analyse(args: &Args, graph: &Graph, bloat: &BloatOutput) -> Analysis {
                     }
                 }
             }
-            Resolved::Std => {
-                push_unattributed(&mut unattributed, entry.name.clone(), entry.size, Bucket::Std)
-            }
+            Resolved::Std => push_unattributed(
+                &mut unattributed,
+                entry.name.clone(),
+                entry.size,
+                Bucket::Std,
+            ),
             Resolved::Unknown => {
                 let name = if entry.name.trim().is_empty() {
                     "[unnamed]".to_string()
@@ -453,7 +456,10 @@ mod tests {
 
         let regex = an.direct.iter().find(|d| d.idx == 1).unwrap();
         assert_eq!(regex.total, 350, "regex + aho-corasick + memchr");
-        assert_eq!(regex.exclusive, 300, "memchr is also reachable from serde_json");
+        assert_eq!(
+            regex.exclusive, 300,
+            "memchr is also reachable from serde_json"
+        );
         assert_eq!(regex.own, 100);
 
         let json = an.direct.iter().find(|d| d.idx == 4).unwrap();
