@@ -1,5 +1,7 @@
 # bloat-tree
 
+[![CI](https://github.com/co3moz/cargo-bloat-tree/actions/workflows/ci.yml/badge.svg)](https://github.com/co3moz/cargo-bloat-tree/actions/workflows/ci.yml)
+
 ```
 $ cargo bloat-tree --release
 
