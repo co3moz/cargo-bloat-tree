@@ -1,9 +1,10 @@
 [package]
 name = "bloat-tree"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Cargo dependency bloat mapper"
 license = "MIT"
+repository = "https://github.com/co3moz/cargo-bloat-tree"
 readme = "README.md"
 keywords = ["cargo", "bloat", "tree", "size", "dependencies"]
 categories = ["development-tools::cargo-plugins"]
